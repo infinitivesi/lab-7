@@ -48,23 +48,25 @@ def get_products(q=None, min_price=None, max_price=None, has_image=None):
         params.append(f'%{q}%')
     if min_price is not None:
         try:
+            min_price_float = float(min_price)
             clauses.append('price >= ?')
-            params.append(float(min_price))
+            params.append(min_price_float)
         except (ValueError, TypeError):
             pass
     if max_price is not None:
         try:
+            max_price_float = float(max_price)
             clauses.append('price <= ?')
-            params.append(float(max_price))
+            params.append(max_price_float)
         except (ValueError, TypeError):
             pass
     if has_image is True:
-        clauses.append("image IS NOT NULL AND image != ''")
+        clauses.append("(image IS NOT NULL AND image != '')")
 
     if clauses:
         query += ' WHERE ' + ' AND '.join(clauses)
     query += ' ORDER BY id'
-    products = conn.execute(query, params).fetchall()
+    products = conn.execute(query, tuple(params)).fetchall()
     conn.close()
     return products
 
