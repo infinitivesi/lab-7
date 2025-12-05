@@ -81,4 +81,8 @@ def api_demo_logout():
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Bind to 0.0.0.0 so the dev server is reachable from other devices on the LAN.
+    # Allow overriding host/port via environment variables for flexibility.
+    host = os.environ.get('HOST', '0.0.0.0')
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host=host, port=port, debug=True)
